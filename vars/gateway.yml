@@ -1,0 +1,21 @@
+# ========= Gateway configuration ====== #
+
+# default settings
+zeebe_gateway_network_host: "0.0.0.0"
+zeebe_gateway_network_port: 26500
+
+
+zeebe_gateway_cluster_security: false
+## set if, if security enabled
+zeebe_gateway_cluster_security_certificate_path: "/some/path"
+zeebe_gateway_cluster_security_privatekey_path: "/some/path"
+
+
+## Please set -2 of the host limit
+zeebe_gateway_threads_count: 2
+
+
+zeebe_gateway_security: false
+## set if, if security enabled
+zeebe_gateway_security_certificate_path: "pass"
+zeebe_gateway_security_privatekey_path: "pass"

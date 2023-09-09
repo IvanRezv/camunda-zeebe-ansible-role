@@ -1,0 +1,56 @@
+---
+- name: "Download openjre tar file from share"
+  ansible.builtin.get_url:
+    url: "{{ source_url }}/{{ java_archive_source }}"
+    dest: "{{ starter_dir }}"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0755"
+
+
+- name: "Unarchive openjre archive and unpack"
+  ansible.builtin.unarchive:
+    src: "{{ starter_dir }}/{{ java_archive_source }}"
+    dest: "{{ starter_dir }}"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0755"
+    remote_src: true
+
+
+- name: "Copy zeebe tar file from share"
+  ansible.builtin.get_url:
+    url: "{{ source_url }}/{{ zeebe_archive_source }}"
+    dest: "{{ starter_dir }}"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0755"
+
+
+- name: "Create needed directories"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    state: directory
+    mode: "0700"
+  with_items:
+    - "{{ heap_dump_dir }}"
+    - "{{ error_log_dir }}"
+    - "{{ private_dir }}"
+    - "{{ broker_dir }}"
+    - "{{ gateway_dir }}"
+
+
+- name: "Unarchive camunda-zeebe archive and unpack"
+  ansible.builtin.unarchive:
+    src: "{{ starter_dir }}/{{ zeebe_archive_source }}"
+    dest: "{{ item }}"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0755"
+    remote_src: true
+    extra_opts: '--strip-components=1'
+  loop:
+    - "{{ broker_dir }}"
+    - "{{ gateway_dir }}"

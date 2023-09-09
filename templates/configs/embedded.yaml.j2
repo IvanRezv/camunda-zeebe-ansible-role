@@ -1,0 +1,44 @@
+zeebe:
+  broker:
+    gateway:
+      enable: {{ gateway_enabled }}
+
+      network:
+        port: {{ gateway_port }}
+
+      security:
+        enabled: {{ security_enabled }}
+        authentication:
+          mode: {{ auth_mode }}
+
+
+    network:
+      host: {{ ansible_host }}
+
+
+    data:
+      directory: {{ zeebe_data_directory }}
+      logSegmentSize: {{ zeebe_log_segment_size }}
+      snapshotPeriod: {{ zeebe_snapshot_period }}
+
+
+    cluster:
+      nodeId: {{ nodeId }}
+      clusterSize: {{ zeebe_broker_cluster_size }}
+      replicationFactor: {{ zeebe_broker_replication_factor }}
+      partitionsCount: {{ zeebe_broker_partitions_count }}
+      initialContactPoints: [ {% for broker in cluster_configuration.broker %}{{ broker }}:26502{% if not loop.last %}, {% endif %}{% endfor %} ]
+
+
+    threads:
+      cpuThreadCount: {{ zeebe_broker_cpu_thread_count }}
+      ioThreadCount: {{ zeebe_broker_io_thread_count }}
+
+
+    exporters:
+      elasticsearch:
+        className: io.camunda.zeebe.exporter.ElasticsearchExporter
+        args:
+          url: {{ elasticsearch_url }}
+          index:
+            prefix: {{ elasticsearch_prefix }}

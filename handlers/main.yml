@@ -1,0 +1,20 @@
+---
+- name: "Broker service"
+  ansible.builtin.service:
+    name: "zeebe-broker"
+    state: "restarted"
+    enabled: true
+    daemon_reload: true
+
+
+- name: "Gateway service"
+  ansible.builtin.service:
+    name: "zeebe-gateway"
+    state: "restarted"
+    enabled: true
+    daemon_reload: true
+
+
+- name: "Reload systemd"
+  ansible.builtin.systemd:
+    daemon_reload: true

@@ -1,0 +1,33 @@
+# ========= Broker configuration ====== #
+
+# security block
+zeebe_broker_security: false
+## set if, if security enabled
+zeebe_broker_security_certificate_path: "/some/path"
+zeebe_broker_security_privatekey_path: "/some/path"
+
+
+# data block
+zeebe_broker_data_directory: "data"
+zeebe_broker_data_log_size: "128MB"
+zeebe_broker_data_snap_period: "15m"
+
+
+# cluster block
+## Equal nodes count
+zeebe_broker_cluster_size: 3
+zeebe_broker_cluster_replication_factor: 3
+# quorum
+zeebe_broker_cluster_partitions_count: 12
+
+
+# threads block
+## Please set -2 of the host limit
+zeebe_broker_threads_cpu_count: 4
+zeebe_broker_threads_io_count: 4
+
+
+# exporters block
+zeebe_broker_exporters_elasticsearch:
+  elasticsearch_url: http://1.1.1.5:9200
+  elasticsearch_prefix: zeebe-test

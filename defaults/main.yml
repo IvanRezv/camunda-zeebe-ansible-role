@@ -1,0 +1,28 @@
+---
+zeebe_version: 8.2.5
+
+
+zeebe_download_url: "https://github.com/camunda/zeebe/releases/download/{{ zeebe_version }}/camunda-zeebe-{{ zeebe_version }}.tar.gz"
+
+java_download_url: "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.6%2B10/OpenJDK17U-jdk_x64_linux_hotspot_17.0.6_10.tar.gz"
+java_home: "/opt/jdk-17.0.6+10-jre"
+
+
+# main
+sys_user: root
+sys_group: root
+
+
+starter_dir: "/opt"
+broker_dir: "{{ starter_dir }}/broker/{{ zeebe_version }}"
+gateway_dir: "{{ starter_dir }}/gateway/{{ zeebe_version }}"
+heap_dump_dir: "{{ starter_dir }}/zeebe/heapdump"
+error_log_dir: "{{ starter_dir }}/zeebe/error-log"
+
+
+cert_dir: "{{ starter_dir }}/ssl"
+
+# ATTENTION, CONVERT YOUR KEY TO .PKCS8 FORMAT !!
+private_key_path: "{{ private_dir }}/roscap.pkcs8.key"
+certificate_path: "{{ private_dir }}/roscap.crt"
+

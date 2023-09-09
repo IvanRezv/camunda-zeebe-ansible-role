@@ -1,0 +1,104 @@
+---
+- name: "Configure cert and key"
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0644"
+  with_items:
+    - { src: 'certs/roscap.pkcs8.key', dest: '{{ private_key_path }}' }
+    - { src: 'certs/roscap.crt', dest: '{{ certificate_path }}' }
+
+
+- name: "Configure broker bin"
+  ansible.builtin.template:
+    src: "binaries/broker_bin.j2"
+    dest: "{{ broker_dir }}/bin/broker"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0777"
+  when: custom_broker_bin == "True"
+
+
+- name: "Configure gateway bin"
+  ansible.builtin.template:
+    src: "binaries/gateway_bin.j2"
+    dest: "{{ gateway_dir }}/bin/gateway"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0777"
+  when: custom_gateway_bin == "True"
+
+
+- name: "Configure zeebe broker configuration"
+  ansible.builtin.template:
+    src: "configs/broker.yaml.j2"
+    dest: "{{ broker_dir }}/config/application.yaml"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0644"
+  when: node_type == "broker"
+
+
+- name: "Configure zeebe gateway configuration"
+  ansible.builtin.template:
+    src: "configs/gateway.yaml.j2"
+    dest: "{{ gateway_dir }}/config/application.yaml"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0644"
+  when: node_type == "gateway"
+
+
+- name: "Configure zeebe embedded configuration gateway + broker"
+  ansible.builtin.template:
+    src: "configs/embedded.yaml.j2"
+    dest: "{{ broker_dir }}/config/application.yaml"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0644"
+  when: node_type == "embedded"
+
+
+- name: "Configure broker serivce"
+  ansible.builtin.template:
+    src: "daemons/broker.service.j2"
+    dest: "/etc/systemd/system/zeebe-broker.service"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0644"
+  notify: "Broker service"
+  when: node_type == "broker"
+
+
+- name: "Configure gateway serivce"
+  ansible.builtin.template:
+    src: "daemons/gateway.service.j2"
+    dest: "/etc/systemd/system/zeebe-gateway.service"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0644"
+  notify: "Gateway service"
+  when: node_type == "gateway"
+
+
+- name: "Reload systemd"
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+
+- name: "Restart zeebe-gateway"
+  ansible.builtin.systemd:
+    name: "zeebe-gateway"
+    state: "restarted"
+    enabled: true
+  when: node_type == "gateway"
+
+
+- name: "Restart zeebe-broker"
+  ansible.builtin.systemd:
+    name: "zeebe-broker"
+    state: "restarted"
+    enabled: true
+  when: node_type == "broker"

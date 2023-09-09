@@ -1,0 +1,10 @@
+# ========= Offline installation with local file share, without network access ====== #
+
+offline_installation: true
+
+file_share_address: "http://10.12.85.65/files"
+
+zeebe_source_template: "camunda-zeebe-{{ zeebe_version }}.tar.gz"
+java_source_template: "OpenJDK17U-jre_x64_linux_hotspot_17.0.6_10.tar"
+
+java_home: "/opt/jdk-17.0.6+10-jre"

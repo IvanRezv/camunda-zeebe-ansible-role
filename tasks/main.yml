@@ -1,0 +1,29 @@
+---
+- name: "Init dependencies"
+  ansible.builtin.include_tasks:
+    file: init.yml
+
+
+- name: "Configure cluster"
+  ansible.builtin.include_tasks:
+    file: configure.yml
+
+
+- name: "Flushing handlers"
+  ansible.builtin.meta: flush_handlers
+
+
+- name: "Ensure zeebe-gateway is running"
+  ansible.builtin.systemd:
+    name: "zeebe-gateway"
+    state: "started"
+    enabled: true
+  when: node_type == "gateway"
+
+
+- name: "Ensure zeebe-broker is running"
+  ansible.builtin.systemd:
+    name: "zeebe-broker"
+    state: "started"
+    enabled: true
+  when: node_type == "broker"

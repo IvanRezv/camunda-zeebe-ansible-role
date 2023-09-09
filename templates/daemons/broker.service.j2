@@ -1,0 +1,14 @@
+[Unit]
+Description=Zeebe Broker
+After=network.target
+
+[Service]
+WorkingDirectory={{ broker_dir }}/bin
+ExecStart={{ broker_dir }}/bin/broker  -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath={{ heap_dump_dir }} -XX:ErrorFile={{ error_log_dir }}/zeebe_error%p.log
+SuccessExitStatus=143
+Environment="JAVA_HOME={{ openjre_java_home }}"
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
