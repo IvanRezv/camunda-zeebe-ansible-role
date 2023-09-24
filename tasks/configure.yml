@@ -7,8 +7,9 @@
     group: "{{ sys_group }}"
     mode: "0644"
   with_items:
-    - { src: 'certs/roscap.pkcs8.key', dest: '{{ private_key_path }}' }
-    - { src: 'certs/roscap.crt', dest: '{{ certificate_path }}' }
+    - { src: 'certs/cert.pkcs8.key', dest: '{{ private_key_path }}' }
+    - { src: 'certs/cert.crt', dest: '{{ certificate_path }}' }
+  when: zeebe_broker_security or zeebe_gateway_cluster_security
 
 
 - name: "Configure broker bin"
@@ -18,7 +19,7 @@
     owner: "{{ sys_user }}"
     group: "{{ sys_group }}"
     mode: "0777"
-  when: custom_broker_bin == "True"
+  when: custom_broker_bin
 
 
 - name: "Configure gateway bin"
@@ -28,7 +29,7 @@
     owner: "{{ sys_user }}"
     group: "{{ sys_group }}"
     mode: "0777"
-  when: custom_gateway_bin == "True"
+  when: custom_gateway_bin
 
 
 - name: "Configure zeebe broker configuration"
@@ -87,18 +88,3 @@
   ansible.builtin.systemd:
     daemon_reload: true
 
-
-- name: "Restart zeebe-gateway"
-  ansible.builtin.systemd:
-    name: "zeebe-gateway"
-    state: "restarted"
-    enabled: true
-  when: node_type == "gateway"
-
-
-- name: "Restart zeebe-broker"
-  ansible.builtin.systemd:
-    name: "zeebe-broker"
-    state: "restarted"
-    enabled: true
-  when: node_type == "broker"

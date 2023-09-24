@@ -1,16 +1,26 @@
 ---
 - name: "Download openjre tar file from share"
   ansible.builtin.get_url:
-    url: "{{ java_download_url }}"
+    url: "{{ source_url }}/{{ java_archive_source }}"
     dest: "{{ starter_dir }}"
     owner: "{{ sys_user }}"
     group: "{{ sys_group }}"
     mode: "0755"
 
 
-- name: "Download zeebe tar file from share"
+- name: "Unarchive openjre archive and unpack"
+  ansible.builtin.unarchive:
+    src: "{{ starter_dir }}/{{ java_archive_source }}"
+    dest: "{{ starter_dir }}"
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "0755"
+    remote_src: true
+
+
+- name: "Copy zeebe tar file from share"
   ansible.builtin.get_url:
-    url: "{{ zeebe_download_url }}"
+    url: "{{ source_url }}/{{ zeebe_archive_source }}"
     dest: "{{ starter_dir }}"
     owner: "{{ sys_user }}"
     group: "{{ sys_group }}"
@@ -30,17 +40,6 @@
     - "{{ private_dir }}"
     - "{{ broker_dir }}"
     - "{{ gateway_dir }}"
-    - "{{ java_home }}"
-
-
-- name: "Unarchive openjre archive and unpack"
-  ansible.builtin.unarchive:
-    src: "{{ starter_dir }}/{{ java_archive_source }}"
-    dest: "{{ java_home }}"
-    owner: "{{ sys_user }}"
-    group: "{{ sys_group }}"
-    mode: "0755"
-    remote_src: true
 
 
 - name: "Unarchive camunda-zeebe archive and unpack"

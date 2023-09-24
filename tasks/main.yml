@@ -1,7 +1,14 @@
 ---
 - name: "Init dependencies"
   ansible.builtin.include_tasks:
+    file: offline_init.yml
+  when: offline_installation
+
+
+- name: "Init dependencies"
+  ansible.builtin.include_tasks:
     file: init.yml
+  when: not offline_installation
 
 
 - name: "Configure cluster"

@@ -1,7 +1,7 @@
 galaxy_info:
   author: "Ivan Rezvetsov"
   description: "Setting up  HA zeebe cluster"
-  company: "DOMRF"
+  company: "Self made"
   license: "license (GPL-2.0-or-later, MIT, etc)"
   min_ansible_version: 2.1
  
